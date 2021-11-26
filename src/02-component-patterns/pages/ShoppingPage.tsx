@@ -12,7 +12,7 @@ import '../styles/custom-styles.css'
 const product1 = {
   id: '1',
   title: 'Coffee Mug - Card',
-  img: './coffee-mug.png'
+  img: './coffee-mug.png',
 }
 
 const product2 = {
@@ -30,13 +30,12 @@ interface ProductInCart extends Product {
 export const ShoppingPage = () => {
   const [shoppingCart, setShoppingCart] = useState<{ [key: string]: ProductInCart }>({})
 
-  const onProductCountChange = ({ count, product }: onChangeArgs): void => {
-    setShoppingCart(prev => ({
-      ...prev,
-      [product.id]: { ...product, count }
+  const onProductCountChange = ({ count, product }: onChangeArgs): void =>
+    setShoppingCart(({ [product.id]: currentProduct, ...restProducts }) => ({
+      ...restProducts,
+      ...(count) && { [product.id]: { ...product, count } }
     }))
-    console.log("🚀 ~ onProductCountChange ~ count, product", { count, product })
-  }
+
 
   return (
     <div >
@@ -52,6 +51,7 @@ export const ShoppingPage = () => {
             key={product.id}
             className='bg-dark text-white'
             product={product}
+            value={shoppingCart[product.id]?.count || 0}
             onChange={onProductCountChange}
           >
             <ProductImage
@@ -68,34 +68,37 @@ export const ShoppingPage = () => {
       </div>
 
       <div className="shopping-cart">
-        <ProductCard
-          className='bg-dark text-white'
-          style={{
-            width: '100px'
-          }}
-          product={product2}
-        >
-          <ProductImage
-            className='custom-image'
-          />
-          <ProductButtons
-            className='custom-buttons'
-          />
-        </ProductCard>
-        <ProductCard
-          className='bg-dark text-white'
-          style={{
-            width: '100px'
-          }}
-          product={product1}
-        >
-          <ProductImage
-            className='custom-image'
-          />
-          <ProductButtons
-            className='custom-buttons'
-          />
-        </ProductCard>
+        {Object.values(shoppingCart).map((product) => (
+          <ProductCard
+            key={product.id}
+            className='bg-dark text-white'
+            onChange={onProductCountChange}
+            value={product.count}
+            style={{
+              width: '100px'
+            }}
+            product={product}
+          >
+            <ProductImage
+              className='custom-image'
+            />
+            <ProductButtons
+              className='custom-buttons'
+              style={{
+                display: 'flex',
+                justifyContent: 'center'
+              }}
+            />
+          </ProductCard>
+        ))}
+      </div>
+
+      <div>
+        <code>
+          <pre>
+            {JSON.stringify(shoppingCart, null, 5)}
+          </pre>
+        </code>
       </div>
     </div>
   )
