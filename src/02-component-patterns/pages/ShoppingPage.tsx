@@ -1,4 +1,3 @@
-import { useState } from "react"
 import {
   ProductButtons,
   ProductCard,
@@ -6,36 +5,12 @@ import {
   ProductTitle
 } from "../components"
 
-import { onChangeArgs, Product } from "../interfaces/interfaces"
+import { useShoppingCart } from "../hooks/useShoppingCart"
+import { products } from "../data/products"
 import '../styles/custom-styles.css'
 
-const product1 = {
-  id: '1',
-  title: 'Coffee Mug - Card',
-  img: './coffee-mug.png',
-}
-
-const product2 = {
-  id: '2',
-  title: 'Coffee Mug - Meme',
-  img: './coffee-mug2.png'
-}
-
-const products: Product[] = [product1, product2]
-
-interface ProductInCart extends Product {
-  count: number
-}
-
 export const ShoppingPage = () => {
-  const [shoppingCart, setShoppingCart] = useState<{ [key: string]: ProductInCart }>({})
-
-  const onProductCountChange = ({ count, product }: onChangeArgs): void =>
-    setShoppingCart(({ [product.id]: currentProduct, ...restProducts }) => ({
-      ...restProducts,
-      ...(count) && { [product.id]: { ...product, count } }
-    }))
-
+  const { shoppingCart, onProductCountChange } = useShoppingCart()
 
   return (
     <div >
