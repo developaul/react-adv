@@ -1,4 +1,4 @@
-import { CSSProperties, useContext } from "react"
+import { CSSProperties, useContext, useMemo } from "react"
 
 import { ProductContext } from './ProductCard';
 
@@ -10,7 +10,9 @@ export interface Props {
 }
 
 export const ProductButtons = ({ className, style }: Props) => {
-  const { increaseBy, counter } = useContext(ProductContext)
+  const { increaseBy, counter, maxCount, } = useContext(ProductContext)
+
+  const isMaxReached = useMemo(() => !!maxCount && counter >= maxCount, [counter, maxCount])
 
   return (
     <div
@@ -18,7 +20,7 @@ export const ProductButtons = ({ className, style }: Props) => {
       className={`${styles.buttonsContainer} ${className}`}>
       <button className={styles.buttonMinus} onClick={() => increaseBy(-1)}>-</button>
       <div className={styles.countLabel}>{counter}</div>
-      <button className={styles.buttonAdd} onClick={() => increaseBy(1)}> +</button>
+      <button disabled={isMaxReached} className={`${styles.buttonAdd} ${isMaxReached && styles.disabled}`} onClick={() => increaseBy(1)}> +</button>
     </div>
   )
 }

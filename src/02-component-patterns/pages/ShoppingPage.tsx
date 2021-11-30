@@ -25,15 +25,28 @@ export const ShoppingPage = () => {
         }}
         product={product}
       >
-        <ProductImage
-          className='custom-image'
-        />
-        <ProductTitle
-          className='text-white'
-        />
-        <ProductButtons
-          className='custom-buttons'
-        />
+        {({ reset, count, increaseBy, isMaxCountReached }) => {
+          return (
+            <>
+              <ProductImage
+                className='custom-image'
+              />
+              <ProductTitle
+                className='text-white'
+              />
+              <ProductButtons
+                className='custom-buttons'
+              />
+
+              <button onClick={reset}>Reset</button>
+              <button onClick={() => increaseBy(-2)}>-2</button>
+              {(!isMaxCountReached) && (
+                <button onClick={() => increaseBy(2)}>+2</button>
+              )}
+              <span>{count}</span>
+            </>
+          )
+        }}
       </ProductCard>
     </div>
   )
